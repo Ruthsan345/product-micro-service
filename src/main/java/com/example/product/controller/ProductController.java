@@ -1,16 +1,14 @@
 package com.example.product.controller;
 
 import com.example.product.api.Products;
-import com.example.product.helper.CsvReader;
 import com.example.product.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.product.services.impl.ProductOperation;
 
-import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.Optional;
 
 
 @RequestMapping("product/api/")
@@ -18,18 +16,23 @@ import java.io.IOException;
 public class ProductController {
     @Autowired
     Products productOp;
-    @Autowired
-    CsvReader csvRead;
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void runAfterStartup() throws IOException {
-        csvRead.readProductCsv(ProductOperation.productList);
-        System.out.print("<--------------Product read from CSV-------------->");
+
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void runAfterStartup() throws IOException {
+//        csvRead.readProductCsv(ProductOperation.productList);
+//        System.out.print("<--------------Product read from CSV-------------->");
+//    }
+
+    @GetMapping("/getAllProduct")
+    public ArrayList<Product> displayAllProduct() {
+        return productOp.displayAllProduct();
     }
 
-    @GetMapping("/getProduct")
-    public Product getProduct(@RequestParam int productId) {
-        return productOp.displayProductDetail(productId);
+    @GetMapping("/getProductById")
+    public Optional<Product> getProduct(@RequestParam int productId) {
+        Optional<Product> pro = productOp.displayProductDetail(productId);
+        return pro ;
     }
 
     @PostMapping("/addProduct")
@@ -42,8 +45,9 @@ public class ProductController {
         return productOp.deleteProduct(productId);
     }
 
-    @PutMapping("/updateProduct")
-    public String updateProduct(@RequestParam int productId, @RequestParam int quantity) {
-        return productOp.updateProductDetail(productId, quantity);
-    }
+//    @PutMapping("/updateProduct")
+//    public String updateProduct(@RequestParam int productId, @RequestParam int quantity) {
+//        return productOp.updateProductDetail(productId, quantity);
+//    }
+
 }

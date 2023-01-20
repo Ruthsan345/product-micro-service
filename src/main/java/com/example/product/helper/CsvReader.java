@@ -25,8 +25,8 @@ public class CsvReader {
                 int stock = Integer.parseInt(csvRecord.get(2));
                 int price = Integer.parseInt(csvRecord.get(3));
                 int gstPercentage = Integer.parseInt(csvRecord.get(4));
-                Product products = new Product(proId, proName, stock, price, gstPercentage);
-                productList.add(products);
+//                Product products = new Product(proId, proName, stock, price, gstPercentage);
+//                productList.add(products);
             }}
 
     }
