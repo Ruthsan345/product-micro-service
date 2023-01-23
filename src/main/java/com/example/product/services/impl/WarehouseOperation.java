@@ -8,6 +8,9 @@ import com.example.product.repository.ProductRepository;
 import com.example.product.repository.WarehouseInventoryRepository;
 import com.example.product.repository.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,11 +52,9 @@ public class WarehouseOperation implements Warehouses {
     }
 
     @Override
-    public ResponseEntity<String> updateProductToWareHouse(int inventoryId, int quantity, int price) {
+    public ResponseEntity<String> updateProductToWareHouse(int inventoryId, int quantity ) {
         WarehouseInventory warehouseInventory = warehouseInventoryRepository.findById(inventoryId);
-
         warehouseInventory.setStock(quantity);
-        warehouseInventory.setPrice(price);
         warehouseInventoryRepository.save(warehouseInventory);
 
         return new ResponseEntity( "successfully updated", HttpStatus.OK);
@@ -64,5 +65,12 @@ public class WarehouseOperation implements Warehouses {
     public ArrayList<WarehouseInventory> getAllProductsByWarehouseId(int warehouseId) {
 
         return warehouseInventoryRepository.findByWarehouseid(warehouseId);
+    }
+
+    @Override
+    public String deleteProductUsingInventoryId(int inventoryId) {
+        warehouseInventoryRepository.deleteById(inventoryId);
+
+        return "Deleted product from warehouse";
     }
 }

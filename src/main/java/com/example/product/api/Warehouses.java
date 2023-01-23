@@ -13,7 +13,9 @@ public interface Warehouses {
     Optional<Warehouse>displayWarehouseDetail(int warehouseId);
     String addWarehouse(Warehouse warehouse);
     String addProductToWarehouse(WarehouseInventory warehouseInventory);
-    ResponseEntity<String> updateProductToWareHouse(int inventoryId, int quantity, int price);
+    ResponseEntity<String> updateProductToWareHouse(int inventoryId, int quantity);
 
     ArrayList<WarehouseInventory> getAllProductsByWarehouseId(int warehouseId);
+
+    String  deleteProductUsingInventoryId(int inventoryId);
 }

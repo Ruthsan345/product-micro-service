@@ -3,6 +3,10 @@ package com.example.product.controller;
 import com.example.product.api.Products;
 import com.example.product.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -17,22 +21,17 @@ public class ProductController {
     @Autowired
     Products productOp;
 
-
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void runAfterStartup() throws IOException {
-//        csvRead.readProductCsv(ProductOperation.productList);
-//        System.out.print("<--------------Product read from CSV-------------->");
-//    }
-
+//    @Cacheable(value="Product")
     @GetMapping("/getAllProduct")
     public ArrayList<Product> displayAllProduct() {
         return productOp.displayAllProduct();
     }
 
-    @GetMapping("/getProductById")
-    public Optional<Product> getProduct(@RequestParam int productId) {
-        Optional<Product> pro = productOp.displayProductDetail(productId);
-        return pro ;
+//    @Cacheable(value="Product", key="#productId")
+    @GetMapping("/getProductById/{productId}")
+    public ResponseEntity<Optional<Product>> getProduct(@PathVariable int productId) {
+        Optional<Product> pro= productOp.displayProductDetail(productId);
+        return new ResponseEntity<>(pro, HttpStatus.OK) ;
     }
 
     @PostMapping("/addProduct")
@@ -40,8 +39,9 @@ public class ProductController {
         return productOp.addProduct(product);
     }
 
-    @DeleteMapping("/deleteProduct")
-    public String deleteProduct(@RequestParam int productId) {
+//    @CacheEvict(value="Product", key="#productId")
+    @DeleteMapping("/deleteProduct/{productId}")
+    public String deleteProduct(@PathVariable int productId) {
         return productOp.deleteProduct(productId);
     }
 

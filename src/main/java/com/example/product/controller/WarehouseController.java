@@ -23,8 +23,8 @@ public class WarehouseController {
         return warehousesOp.displayAllWarehouse();
     }
 
-    @GetMapping("/getWarehouseById")
-    public Optional<Warehouse> getWarehouse(@RequestParam int warehouseId) {
+    @GetMapping("/getWarehouseById/{warehouseId}")
+    public Optional<Warehouse> getWarehouse(@PathVariable int warehouseId) {
         Optional<Warehouse> pro = warehousesOp.displayWarehouseDetail(warehouseId);
         return pro ;
     }
@@ -40,14 +40,20 @@ public class WarehouseController {
     }
 
     @PutMapping("/updateProductToWareHouse")
-    public ResponseEntity<String> updateProductToWareHouse(@RequestParam int inventoryId, @RequestParam int quantity , @RequestParam int price) {
-        return warehousesOp.updateProductToWareHouse(inventoryId,quantity,price);
+    public ResponseEntity<String> updateProductToWareHouse(@RequestParam int inventoryId, @RequestParam int quantity ) {
+        return warehousesOp.updateProductToWareHouse(inventoryId,quantity);
     }
 
-    @GetMapping("/getAllProductsByWarehouseId")
-    public ArrayList<WarehouseInventory> getAllProductsByWarehouseId(@RequestParam int warehouseId) {
+    @GetMapping("/getAllProductsByWarehouseId/{warehouseId}")
+    public ArrayList<WarehouseInventory> getAllProductsByWarehouseId(@PathVariable int warehouseId) {
         ArrayList<WarehouseInventory> pro = warehousesOp.getAllProductsByWarehouseId(warehouseId);
         return pro ;
+    }
+
+    @DeleteMapping("/deleteProductUsingInventoryId/{inventoryId}")
+    public String deleteProductUsingInventoryId(@PathVariable int inventoryId) {
+
+        return warehousesOp.deleteProductUsingInventoryId(inventoryId);
     }
 
 

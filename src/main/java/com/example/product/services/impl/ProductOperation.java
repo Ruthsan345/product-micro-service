@@ -1,12 +1,12 @@
 package com.example.product.services.impl;
 
 import com.example.product.api.Products;
-import com.example.product.exception.UserDefinedException;
+import com.example.product.kafka.KafkaPublishingService;
 import com.example.product.model.Product;
-
-//import com.example.product.repository.ProductRepository;
 import com.example.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,28 +19,38 @@ public class ProductOperation implements Products {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    KafkaPublishingService kafkaPublishingService;
+
 
     @Override
+//    @Cacheable(value="ProductList")
     public ArrayList<Product> displayAllProduct() {
         return (ArrayList<Product>) productRepository.findAll();
     }
 
 
-
-
     @Override
+    @Cacheable(value="Product", key="#productId")
     public Optional<Product> displayProductDetail(int productId){
-        return productRepository.findById(productId);
+        System.out.print("PRODUCT DISPLAYED");
+        Optional<Product> product = productRepository.findById(productId);
+        kafkaPublishingService.sendProductInformation(product.get());
+
+        return product;
+
     }
 
     @Override
     public String addProduct(Product pro) {
+
         productRepository.save(pro);
 //        productList.add(pro);
         return "Successfully added the product";
     }
 
     @Override
+    @CacheEvict(value="Product", key="#productId")
     public String deleteProduct(int productId) {
         productRepository.deleteById(productId);
 
